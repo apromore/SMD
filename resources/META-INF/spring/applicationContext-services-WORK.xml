@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:sws="http://www.springframework.org/schema/web-services" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/util     http://www.springframework.org/schema/util/spring-util-3.0.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:component-scan base-package="org.apromore"/>
+
+    <!-- ************************** WebServices ************************** -->
+
+	<!--
+    <sws:annotation-driven />
+
+    <sws:dynamic-wsdl id="manager" portTypeName="Manager" locationUri="/services/manager/" targetNamespace="urn:qut-edu-au:schema:apromore:manager">
+        <sws:xsd location="classpath:manager.xsd"/>
+    </sws:dynamic-wsdl>
+
+    <sws:interceptors>
+        <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"
+            p:logRequest="false" p:logResponse="false" />
+        <bean id="validatingInterceptor"  class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor"
+            p:xsdSchemaCollection-ref="schemaCollection" p:validateRequest="false" p:validateResponse="false"/>
+    </sws:interceptors>
+
+    <bean id="marshallingMethodProcessor" class="org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor"
+        p:marshaller-ref="jaxb2Marshaller" p:unmarshaller-ref="jaxb2Marshaller"/>
+
+    <bean id="defaultMethodEndpointAdapter" class="org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter">
+        <property name="methodArgumentResolvers">
+            <list>
+                <ref bean="marshallingMethodProcessor"/>
+            </list>
+        </property>
+        <property name="methodReturnValueHandlers">
+            <list>
+                <ref bean="marshallingMethodProcessor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="schemas" ref="schemasList" />
+        <property name="contextPaths">
+            <list>
+                <value>org.apromore.model</value>
+            </list>
+        </property>
+    </bean>
+
+    <util:list id="schemasList">
+        <value>classpath:manager.xsd</value>
+    </util:list>
+
+    <bean id="schemaCollection" class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection">
+        <property name="xsds" value="/WEB-INF/wsdl/manager.xsd"/>
+        <property name="inline" value="true"/>
+    </bean>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher"/>
+	-->
+
+    <!-- ************************** Non WebServices ************************** -->
+    
+    <bean id="gedMatrix" class="org.apromore.toolbox.clustering.algorithms.dbscan.InMemoryGEDMatrix" />
+    <bean id="clusterAnalyzer" class="org.apromore.toolbox.clustering.analyzers.ClusterAnalyzer" />
+    <bean id="dbscanClusterer" class="org.apromore.toolbox.clustering.algorithms.dbscan.InMemoryClusterer" />
+    <bean id="hacClusterer" class="clustering.hac.HACClusterer" />
+    <bean id="excludedObjectDbscanClusterer" class="org.apromore.toolbox.clustering.algorithms.dbscan.InMemoryExcludedObjectClusterer" />
+    <bean id="dbscanHierarchyFilter" class="org.apromore.toolbox.clustering.algorithms.dbscan.InMemoryHierarchyBasedFilter" />
+    
+    <bean id="DMatrix" class="clustering.DMatrix" />
+    <bean id="ContainmentRelation" class="clustering.containment.ContainmentRelationImpl" />
+    <bean id="DissimilarityMatrix" class="clustering.hierarchy.HierarchyAwareDissimMatrixGenerator" />
+    <bean id="incrementalDistanceMatrixGenerator" class="clustering.incremental.IncrementalDissimMatrixGenerator" />
+    <bean id="DissimilarityMatrixReader" class="clustering.dissimilarity.DissimilarityMatrixReader" />
+    <bean id="GEDBasedSharingRefiner" class="org.apromore.service.utils.GEDBasedSharingRefiner" />
+    <bean id="ClusterHierarchyResolver" class="org.apromore.service.utils.ClusterHierarchyResolver" />
+
+    <bean id="dataAccessCanoniserManager" class="org.apromore.dao.service.DataAccessCanoniserManagerImpl" />
+    <bean id="dataAccessManagerManager" class="org.apromore.dao.service.DataAccessManagerManagerImpl" />
+    <bean id="dataAccessToolboxManager" class="org.apromore.dao.service.DataAccessToolboxManagerImpl" />
+
+    <bean id="canoniserDataAccessClient" class="org.apromore.canoniser.da.CanoniserDataAccessClient" p:manager-ref="dataAccessCanoniserManager" />
+    <bean id="toolboxDataAccessClient" class="org.apromore.toolbox.da.ToolboxDataAccessClient" p:manager-ref="dataAccessToolboxManager" />
+    <bean id="managerDataAccessClient" class="org.apromore.manager.da.ManagerDataAccessClient" p:manager-ref="dataAccessManagerManager" />
+    <bean id="managerCanoniserClient" class="org.apromore.manager.canoniser.ManagerCanoniserClient" p:manager-ref="canoniserManager" />
+    <bean id="managerToolboxClient" class="org.apromore.manager.toolbox.ManagerToolboxClient" p:manager-ref="toolboxManager" />
+
+    <bean id="canoniserManager" class="org.apromore.canoniser.service.CanoniserManagerImpl" p:client-ref="canoniserDataAccessClient" />
+    <bean id="toolboxManager" class="org.apromore.toolbox.service.ToolboxManagerImpl" p:client-ref="toolboxDataAccessClient" />
+
+
+	<bean id="clusteringService" class="org.apromore.service.impl.ClusteringServiceImpl" />
+	<bean id="clusterAnalyzerService" class="org.apromore.service.impl.ClusterAnalyzerServiceImpl" />
+	<bean id="maximalFragmentFilter" class="org.apromore.toolbox.clustering.algorithms.dbscan.refinements.MaximalFragmentFilter" />
+	<bean id="clusterExpander" class="org.apromore.toolbox.clustering.algorithms.expansion.ClusterExpander" />
+	<bean id="GEDSimilaritySearcher" class="clustering.hierarchy.GEDSimilaritySearcher" />
+    <bean id="CanoniserService" class="org.apromore.service.impl.CanoniserServiceImpl" />
+    <bean id="ContentService" class="org.apromore.service.impl.ContentServiceImpl" />
+    <bean id="DomainService" class="org.apromore.service.impl.DomainServiceImpl" />
+    <bean id="FormatService" class="org.apromore.service.impl.FormatServiceImpl" />
+    <bean id="FragmentService" class="org.apromore.service.impl.FragmentServiceImpl" />
+    <bean id="GraphService" class="org.apromore.service.impl.GraphServiceImpl" />
+    <bean id="LockService" class="org.apromore.service.impl.LockServiceImpl" />
+    <bean id="ProcessService" class="org.apromore.service.impl.ProcessServiceImpl" />
+    <bean id="RepositoryService" class="org.apromore.service.impl.RepositoryServiceImpl" />
+    <bean id="SimilarityService" class="org.apromore.service.impl.SimilarityServiceImpl" />
+    <bean id="MergeService" class="org.apromore.service.impl.MergeServiceImpl" />
+    <bean id="UserService" class="org.apromore.service.impl.UserServiceImpl" />
+
+    <!-- bean id="Composer" class="org.apromore.service.impl.Composer" /-->
+    <bean id="IComposer" class="org.apromore.service.impl.Composer" />
+    <bean id="SubprocessAwareComposer" class="org.apromore.service.impl.SubprocessAwareComposer" />
+    <bean id="SGAwareComposer" class="org.apromore.service.impl.SimpleGraphAwareComposer" />
+    <!-- bean id="Decomposer" class="org.apromore.service.impl.Decomposer" /-->
+    <bean id="IDecomposer" class="org.apromore.service.impl.Decomposer" />
+    <bean id="UIHelper" class="org.apromore.service.helper.UIHelper" />
+    <bean id="BondContentHandler" class="org.apromore.service.helper.BondContentHandler" />
+    <bean id="ChangePropagator" class="org.apromore.service.helper.ChangePropagator" />
+    <bean id="PocketMapper" class="org.apromore.service.helper.PocketMapper" />
+    <bean id="OverlapResolver" class="org.apromore.service.utils.OverlapResolver" />
+
+    <bean id="processCollectionMiner" class="org.apromore.mining.ProcessCollectionMiner" />
+    <bean id="standardizedMiner" class="org.apromore.mining.StandardizedProcessMiner" />
+    <bean id="logClusterBasedProcessMiner" class="org.apromore.mining.LogClusterBasedProcessMiner" />
+    <bean id="scMiner" class="org.apromore.mining.sc.SequenceClusteringMiner" />
+    <bean id="dwsMiner" class="org.apromore.mining.dws.DWSCollectionMiner" />
+    <bean id="pureProcessMiner" class="org.apromore.mining.PureProcessMiner" />
+    <bean id="logComplexityChecker" class="org.apromore.mining.LogComplexityChecker" />
+    <bean id="guideTreeBasedMiner" class="org.apromore.mining.guidetree.plain.GuideTreeBasedMiner" />
+    <bean id="logClusterer" class="org.apromore.mining.AggregatedLogClusterer" />
+    <bean id="processMiner" class="org.apromore.mining.ProcessMiner" />
+    <bean id="prom6Miner" class="org.apromore.mining.guidetree.Prom6Miner" />
+    <bean id="prom5BasedMiner" class="org.apromore.mining.guidetree.Prom5BasedMiner" />
+    <bean id="processModelImporter" class="org.apromore.mining.ProcessModelImporter" />
+    <bean id="cpfImporter" class="org.apromore.mining.sc.CPFImporter" />
+    <bean id="processSerializer" class="org.apromore.mining.utils.ProcessSerializer" />
+    <bean id="processStandardizer" class="org.apromore.mining.standardize.ProcessStandardizer" />
+    <bean id="processMerger" class="org.apromore.mining.standardize.ProcessMerger" />
+    <bean id="interactiveClusterSelector" class="org.apromore.mining.standardize.InteractiveClusterSelector" />
+    <bean id="fragSizeBasedClusterSelector" class="org.apromore.mining.standardize.FragSizeBasedClusterSelector" />
+    <bean id="parameterBasedClusterSelector" class="org.apromore.mining.standardize.ParameterBasedClusterSelector" />
+    <bean id="exactCloneDetector" class="org.apromore.mining.standardize.ExactCloneDetector" />
+    <bean id="topDownClusterSelector" class="org.apromore.mining.standardize.TopDownClusterSelector" />
+    <bean id="ruleBasedClusterStandardizer" class="org.apromore.mining.standardize.RuleBasedClusterStandardizer" />
+    <bean id="processComplexityChecker" class="org.apromore.mining.ProcessComplexityChecker" />
+    <bean id="selectiveProcessComplexityChecker" class="org.apromore.mining.complexity.SelectiveProcessComplexityChecker" />
+    <bean id="sizePriorityProcessComplexityChecker" class="org.apromore.mining.complexity.SizePriorityBasedProcessComplexityChecker" />
+    <bean id="aggregatedComplexityChecker" class="org.apromore.mining.complexity.AggregatedComplexityChecker" />
+    <bean id="aggregatedMetricComplexityChecker" class="org.apromore.mining.complexity.AggregatedMetricComplexityChecker" />
+    <bean id="initialProcessModelComplexityChecker" class="org.apromore.mining.InitialProcessModelComplexityChecker" />
+
+    <bean id="gtBasedProcessCollectionMiner" class="org.apromore.mining.guidetree.pcm.GTBasedProcessCollectionMiner" />
+    <bean id="gtClusterer" class="org.apromore.mining.guidetree.pcm.GTClusterer" />
+    <bean id="gtClusterSelector" class="org.apromore.mining.guidetree.pcm.GTClusterSelector" />
+    <bean id="gtComplexityChecker" class="org.apromore.mining.guidetree.pcm.GTComplexityChecker" />
+    <bean id="gtProcessImporter" class="org.apromore.mining.guidetree.pcm.GTProcessImporter" />
+    <bean id="gtProcessStandardizer" class="org.apromore.mining.guidetree.pcm.GTProcessStandardizer" />
+    <bean id="gtSubprocessAwareComposer" class="org.apromore.mining.guidetree.pcm.GTSubprocessAwareComposer" />
+    
+    <bean id="dwsBasedProcessCollectionMiner" class="org.apromore.mining.dws.pcm.DWSBasedProcessCollectionMiner" />
+    <bean id="dwsClusterer" class="org.apromore.mining.dws.pcm.DWSClusterer" />
+    <bean id="dwsClusterSelector" class="org.apromore.mining.dws.pcm.DWSClusterSelector" />
+    <bean id="dwsComplexityChecker" class="org.apromore.mining.dws.pcm.DWSComplexityChecker" />
+    <bean id="dwsProcessImporter" class="org.apromore.mining.dws.pcm.DWSProcessImporter" />
+    <bean id="dwsProcessStandardizer" class="org.apromore.mining.dws.pcm.DWSProcessStandardizer" />
+    <bean id="dwsSubprocessAwareComposer" class="org.apromore.mining.dws.pcm.DWSSubprocessAwareComposer" />
+    <bean id="dwsProcessMiner" class="org.apromore.mining.dws.pcm.DWSProcessMiner" />
+    
+    <bean id="processStandardizerTest" class="org.apromore.mining.test.ProcessStandardizerTest" />
+    <bean id="processAnalyzer" class="org.apromore.mining.test.ProcessAnalyzer" />
+    <bean id="testingComposer" class="org.apromore.mining.test.TestingComposer" />
+    <bean id="mtest1" class="org.apromore.mining.test.MiningTest1" />
+    <bean id="mtest2" class="org.apromore.mining.test.MiningTestP5" />
+
+    <bean id="workRunner" class="org.apromore.service.impl.WorkRunner" />
+    <bean id="simplifiedProcessMiner" class="org.apromore.service.mining.SimplifiedProcessMiner" />
+
+</beans>

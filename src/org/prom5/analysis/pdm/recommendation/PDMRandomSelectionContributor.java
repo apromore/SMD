@@ -1,0 +1,60 @@
+package org.prom5.analysis.pdm.recommendation;
+
+import org.prom5.framework.models.pdm.PDMModel;
+import org.prom5.framework.models.recommendation.RecommendationQuery;
+import org.prom5.framework.models.recommendation.RecommendationResult;
+import org.prom5.framework.plugin.Plugin;
+
+/**
+ * An instance abstraction is an entity which, based on a specific subset
+ * of information available to it, can calculate a set of recommendations for a
+ * provided query.
+ * <p>Typically a recommendation contributor will cluster a set of somewhat
+ * comparable process instances, and return recommendations based on their
+ * common characteristics.
+ *
+ * @author Christian W. Guenther (christian@deckfour.org)
+ *
+ */
+
+//I am not going to use contributors to keep it simple at first!
+public class PDMRandomSelectionContributor implements Plugin {
+
+	public PDMRandomSelectionContributor() {
+		super();
+	}
+
+	/**
+	 * This method calculates this instance's contributions to a specified query, i.e.
+	 * the recommendations provided by this contributor. Recommendations returned by
+	 * this method are supposed to be internally ordered, i.e. have respective confidences
+	 * assigned which reflect their relative importance as intended by this contributor.
+	 * @param query The query to which recommendations are inquired.
+	 * @param process The process name the query refers to
+	 * @return A set of recommendations provided to the specified query, in a
+	 * <code>RecommendationResult</code> container.
+	 */
+	public RecommendationResult generateRecommendations(RecommendationQuery query, PDMModel model) {
+		RecommendationResult result = null;
+		return result;
+	}
+
+
+	/**
+	 * Gets the name of this plugin.
+	 * Implementing classes should use this method to return their own name.
+	 *
+	 * @return the name of this plugin
+	 */
+	public String getName(){
+		return "Random Selection";
+	}
+
+	/**
+	 *
+	 * @return String
+	 */
+	public String getHtmlDescription(){
+		return "This recommendation plugin randomly selects a PDM operation from the list of enabled operations.";
+	}
+}

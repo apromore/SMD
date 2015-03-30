@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration>
+    <contextName>Apromore</contextName>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+	      <pattern>
+	        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+	     </pattern>
+		</encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/apromore.log</file>
+        <append>false</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs\apromore.log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} - [%t] %-5p %30c - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.hibernate" level="ERROR"/>
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.springframework.beans.factory" level="ERROR" />
+    <logger name="net.sf.ehcache" level="ERROR"/>
+    <logger name="org.hibernate.type" level="ERROR"/>
+    <logger name="org.apromore" level="ERROR" />
+    <logger name="clustering" level="ERROR" />
+    <logger name="nl" level="ERROR" />
+    <logger name="common" level="ERROR" />
+    <logger name="org.apromore.service.impl.ProcessServiceImpl" level="DEBUG" />
+    <logger name="org.apromore.service.utils.OverlapResolver" level="TRACE" />
+    <logger name="org.apromore.mining.standardize.InteractiveClusterSelector" level="DEBUG" />
+    <logger name="org.apromore.mining.standardize.TopDownClusterSelector" level="DEBUG" />
+    <logger name="org.apromore.mining.standardize.ExactCloneDetector" level="DEBUG" />
+    <logger name="org.apromore.mining.standardize.ParameterBasedClusterSelector" level="DEBUG" />
+    <logger name="org.apromore.mining.standardize.ProcessMerger" level="DEBUG" />
+    <logger name="org.apromore.mining" level="DEBUG" />
+    <logger name="org.apromore.service.mining" level="DEBUG" />
+    <logger name="org.apromore.mining.utils.CycleRemover" level="DEBUG" />
+    <logger name="org.apromore.mining.utils.CycleFixer" level="ERROR" />
+    <logger name="org.apromore.mining.utils.CPFTransformer" level="ERROR" />
+    <logger name="org.apromore.mining.utils.SingleTerminalCycleFormer" level="ERROR" />
+    <logger name="clustering.hierarchy.HierarchyAwareDissimMatrixGenerator" level="INFO" />
+    <logger name="clustering.incremental.IncrementalDissimMatrixGenerator" level="INFO" />
+    <logger name="graph.Graph" level="DEBUG" />
+    <logger name="org.apromore.mining.guidetree.pcm" level="DEBUG" />
+    <logger name="org.apromore.mining.dws.pcm" level="DEBUG" />
+
+    <root level="DEBUG">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
